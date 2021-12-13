@@ -1,0 +1,6 @@
+Crear funcio que llegeix una linia (bucle que va per cada caracter i el guarda en un array fins que troba \n(fi de linia)) // Retornar si ha pogut arribar al final de linia per tal de poder saltar el bucle
+Crear un bucle que llegeixi totes les linies de larxiu
+
+La funcio que llegeix la linia pot anar contant les comes. Quan arribi a la coma abans de la columna que no ens interessa deixa de guardar la informacio fins a la pròxima coma
+
+La funcio de lexercici 4 li passes la linia i pots triar el camp que vols (per exemple li passem una linia i li demanem que ens retorni la fila 4) Ens ho retorna sempre en string
