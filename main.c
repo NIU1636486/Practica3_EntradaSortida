@@ -11,9 +11,12 @@ char buf[1];
 char liniaMaxLikes[3000], liniaMaxDislikes[3000]; /*Línies amb més likes i més dislikes*/
 char maxLikesTitle[100], maxLikesTime[100], maxLikesViews[100], maxLikesLikes[100], maxLikesDislikes[100];/*Caselles desitjades del video amb més likes*/
 char maxDislikesTitle[100], maxDislikesTime[100], maxDislikesViews[100], maxDislikesLikes[100], maxDislikesDislikes[100];/*Caselles desitjades del video amb més dislikes*/
+int primerVisualitzacions = 0, segonVisualitzacions = 0, tercerVisualitzacions = 0;
 int sumatoriVisualitzacions = 0, sumatoriLikes = 0, sumatoriDislikes = 0, count = 0;
 int mitjanaVisualitzacions, mitjanaLikes, mitjanaDislikes, anteriorLikes = 0, anteriorDislikes = 0;
-char missatgeArxiu[3000];
+char titol[10000], primerTitol[10000], segonTitol[10000], tercerTitol[10000];
+char missatgeArxiu[300000];
+char videoError[10];
 
 char *getField(int fn, char line[], char field[])
 {
@@ -85,11 +88,12 @@ void main()
         unaLinia(line, fd);
         if (line[0] != '\0' && f != 0) /*Si la linia no te cap error*/
         {
-            printf("Analitzant linia %d\n", f + 1);
             /*Recollir likes, dislikes i visualitacions*/
             getField(7, line, visualitzacions);
             getField(8, line, likes);
             getField(9, line, dislikes);
+            getField(2, line, titol);
+
             if (atoi(likes) > anteriorLikes)
             {
                 anteriorLikes = atoi(likes);
@@ -102,10 +106,46 @@ void main()
                 strcpy(liniaMaxDislikes, line);
             }
 
-            sumatoriVisualitzacions += atoi(visualitzacions);
-            sumatoriLikes += atoi(likes);
-            sumatoriDislikes += atoi(dislikes);
-            count++;
+            if (atoi(visualitzacions) > primerVisualitzacions)
+            {
+                tercerVisualitzacions = segonVisualitzacions;
+                segonVisualitzacions = primerVisualitzacions;
+                primerVisualitzacions = atoi(visualitzacions);
+                strcpy(tercerTitol, segonTitol);
+                strcpy(segonTitol, primerTitol);
+                strcpy(primerTitol, titol);
+
+
+            }
+            else
+            {
+                if (atoi(visualitzacions) > segonVisualitzacions && segonVisualitzacions != 0) 
+                {
+                    tercerVisualitzacions = segonVisualitzacions;
+                    segonVisualitzacions = atoi(visualitzacions);
+                    strcpy(tercerTitol, segonTitol);
+                    strcpy(segonTitol, titol);
+                }
+                else
+                {
+                    if (atoi(visualitzacions) > tercerVisualitzacions && tercerVisualitzacions != 0)
+                    {
+                        tercerVisualitzacions = atoi(visualitzacions);
+                        strcpy(tercerTitol, titol);
+                        
+                    }
+
+                }
+
+            }
+            getField(13, line, videoError);
+            if (videoError != "FALSE")
+            {
+                sumatoriVisualitzacions += atoi(visualitzacions);
+                sumatoriLikes += atoi(likes);
+                sumatoriDislikes += atoi(dislikes);
+                count++;
+            }
         }
     }
     close(fd);
@@ -126,11 +166,12 @@ void main()
     getField(9, liniaMaxDislikes, maxDislikesDislikes);
     /*Creem la variable missatgeArxiu amb tot el que volem escriure a l'arxiu*/
     snprintf(missatgeArxiu, sizeof(missatgeArxiu),
-    "Mitjana visualitzacions: %d\nMitjana likes: %d\nMitjana dislikes: %d\nVIDEO AMB MES LIKES: \n     title: %s\n     publish_time: %s\n     views: %s\n     likes: %s\n     dislikes: %s\n ------------------------------\nVIDEO AMB MES DISLIKES: \n     title: %s\n     publish_time: %s\n     views: %s\n     likes: %s\n     dislikes: %s",
-    mitjanaVisualitzacions, mitjanaLikes, mitjanaDislikes, maxLikesTitle, maxLikesTime, maxLikesViews, maxLikesLikes, maxLikesDislikes, maxDislikesTitle, maxDislikesTime, maxDislikesViews, maxDislikesLikes, maxDislikesDislikes);
+    "Mitjana visualitzacions: %d\nMitjana likes: %d\nMitjana dislikes: %d\nVIDEO AMB MES LIKES: \n     title: %s\n     publish_time: %s\n     views: %s\n     likes: %s\n     dislikes: %s\n ------------------------------\nVIDEO AMB MES DISLIKES: \n     title: %s\n     publish_time: %s\n     views: %s\n     likes: %s\n     dislikes: %s\n\nTOP VISUALITZACIONS:     \nTOP 1:\n          Titol: %s\n          Visualitzacions: %d\n     TOP 2:\n          Titol: %s\n          Visualitzacions: %d\n     TOP 3:\n          Titol: %s\n          Visualitzacions: %d\n",
+    mitjanaVisualitzacions, mitjanaLikes, mitjanaDislikes, maxLikesTitle, maxLikesTime, maxLikesViews, maxLikesLikes, maxLikesDislikes, maxDislikesTitle, maxDislikesTime, maxDislikesViews, maxDislikesLikes, maxDislikesDislikes, primerTitol, primerVisualitzacions, segonTitol, segonVisualitzacions, tercerTitol, tercerVisualitzacions);
     /*Obrir i escriure a l'arxiu GlobalOutput.txt*/
     int arxiuFinal = open("GlobalOutput.txt", O_WRONLY);
     write(arxiuFinal, missatgeArxiu, strlen(missatgeArxiu));
     close(arxiuFinal);
+    printf("Programa acabat.");
 }
 
