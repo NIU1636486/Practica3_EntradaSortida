@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
 /*DECLARACIÓ DE VARIABLES*/
 int dintreCometes = 0;
 char buf[1];
@@ -17,6 +18,7 @@ int mitjanaVisualitzacions, mitjanaLikes, mitjanaDislikes, anteriorLikes = 0, an
 char titol[10000], primerTitol[10000], segonTitol[10000], tercerTitol[10000];
 char missatgeArxiu[300000];
 char videoError[10];
+double proces = 0;
 
 char *getField(int fn, char line[], char field[])
 {
@@ -147,6 +149,7 @@ void main()
                 count++;
             }
         }
+        
     }
     close(fd);
     /*Càlculs de mitjanes*/
@@ -166,7 +169,7 @@ void main()
     getField(9, liniaMaxDislikes, maxDislikesDislikes);
     /*Creem la variable missatgeArxiu amb tot el que volem escriure a l'arxiu*/
     snprintf(missatgeArxiu, sizeof(missatgeArxiu),
-    "Mitjana visualitzacions: %d\nMitjana likes: %d\nMitjana dislikes: %d\nVIDEO AMB MES LIKES: \n     title: %s\n     publish_time: %s\n     views: %s\n     likes: %s\n     dislikes: %s\n ------------------------------\nVIDEO AMB MES DISLIKES: \n     title: %s\n     publish_time: %s\n     views: %s\n     likes: %s\n     dislikes: %s\n\nTOP VISUALITZACIONS:     \nTOP 1:\n          Titol: %s\n          Visualitzacions: %d\n     TOP 2:\n          Titol: %s\n          Visualitzacions: %d\n     TOP 3:\n          Titol: %s\n          Visualitzacions: %d\n",
+    "Mitjana visualitzacions: %d\nMitjana likes: %d\nMitjana dislikes: %d\nVIDEO AMB MES LIKES: \n     title: %s\n     publish_time: %s\n     views: %s\n     likes: %s\n     dislikes: %s\n------------------------------------------------------------\nVIDEO AMB MES DISLIKES: \n     title: %s\n     publish_time: %s\n     views: %s\n     likes: %s\n     dislikes: %s\n\nTOP VISUALITZACIONS:\n     TOP 1:\n          Titol: %s\n          Visualitzacions: %d\n     TOP 2:\n          Titol: %s\n          Visualitzacions: %d\n     TOP 3:\n          Titol: %s\n          Visualitzacions: %d\n",
     mitjanaVisualitzacions, mitjanaLikes, mitjanaDislikes, maxLikesTitle, maxLikesTime, maxLikesViews, maxLikesLikes, maxLikesDislikes, maxDislikesTitle, maxDislikesTime, maxDislikesViews, maxDislikesLikes, maxDislikesDislikes, primerTitol, primerVisualitzacions, segonTitol, segonVisualitzacions, tercerTitol, tercerVisualitzacions);
     /*Obrir i escriure a l'arxiu GlobalOutput.txt*/
     int arxiuFinal = open("GlobalOutput.txt", O_WRONLY);
