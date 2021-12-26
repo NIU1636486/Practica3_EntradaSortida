@@ -141,7 +141,7 @@ void main()
 
             }
             getField(13, line, videoError);
-            if (videoError != "FALSE")
+            if (videoError == "FALSE")
             {
                 sumatoriVisualitzacions += atoi(visualitzacions);
                 sumatoriLikes += atoi(likes);
