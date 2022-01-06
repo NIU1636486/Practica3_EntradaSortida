@@ -141,13 +141,10 @@ void main()
 
             }
             getField(13, line, videoError);
-            if (videoError == "FALSE")
-            {
                 sumatoriVisualitzacions += atoi(visualitzacions);
                 sumatoriLikes += atoi(likes);
                 sumatoriDislikes += atoi(dislikes);
                 count++;
-            }
         }
         
     }
@@ -177,4 +174,3 @@ void main()
     close(arxiuFinal);
     printf("Programa acabat.");
 }
-
